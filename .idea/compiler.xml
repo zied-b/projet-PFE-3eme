@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="Gateway-server" />
+        <module name="MS-Computer-Hardware" />
+        <module name="MS-Moyenne-Transport" />
+        <module name="MS-Authentication" />
+        <module name="MS-Reservation" />
+        <module name="Ms-Meeting-Room" />
+        <module name="Eureka-server" />
+        <module name="confg-server" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="confg-server" target="19" />
+      <module name="Eureka-server" target="19" />
+      <module name="Gateway-server" target="19" />
+      <module name="MS-Authentication" target="17" />
+      <module name="MS-Computer-Hardware" target="17" />
+      <module name="Ms-Meeting-Room" target="17" />
+      <module name="MS-Moyenne-Transport" target="17" />
+      <module name="MS-Reservation" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Eureka-server" options="-parameters" />
+      <module name="Gateway-server" options="-parameters" />
+      <module name="MS-Authentication" options="-parameters" />
+      <module name="MS-Computer-Hardware" options="-parameters" />
+      <module name="MS-Moyenne-Transport" options="-parameters" />
+      <module name="MS-Reservation" options="-parameters" />
+      <module name="Ms-Meeting-Room" options="-parameters" />
+      <module name="confg-server" options="-parameters" />
+    </option>
+  </component>
+</project>

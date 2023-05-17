@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Eureka-server/Eureka-server.iml" filepath="$PROJECT_DIR$/Eureka-server/Eureka-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Gateway-server/Gateway-server.iml" filepath="$PROJECT_DIR$/Gateway-server/Gateway-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MS-Authentication/MS-Authentication.iml" filepath="$PROJECT_DIR$/MS-Authentication/MS-Authentication.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MS-Computer-Hardware/MS-Computer-Hardware.iml" filepath="$PROJECT_DIR$/MS-Computer-Hardware/MS-Computer-Hardware.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MS-Moyenne-Transport/MS-Moyenne-Transport.iml" filepath="$PROJECT_DIR$/MS-Moyenne-Transport/MS-Moyenne-Transport.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MS-Reservation/MS-Reservation.iml" filepath="$PROJECT_DIR$/MS-Reservation/MS-Reservation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Ms-Meeting-Room/Ms-Meeting-Room.iml" filepath="$PROJECT_DIR$/Ms-Meeting-Room/Ms-Meeting-Room.iml" />
+      <module fileurl="file://$PROJECT_DIR$/confg-server/confg-server.iml" filepath="$PROJECT_DIR$/confg-server/confg-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/reservation-de-biens.iml" filepath="$PROJECT_DIR$/.idea/reservation-de-biens.iml" />
+    </modules>
+  </component>
+</project>
