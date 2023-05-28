@@ -3,6 +3,7 @@ package com.authentication.msauthentication.service.Interface;
 
 import com.authentication.msauthentication.Entity.users;
 import com.authentication.msauthentication.RequestConroller.*;
+import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,11 +14,11 @@ import java.util.Optional;
 public interface InterfaceServiceUsers {
 
     List<users> fetchAllUsers();
-    ResponseEntity<String> AddUser(String Email  ) ;
+    ResponseEntity<String> AddUser(String Email  ) throws MessagingException;
     Optional<users> FetchUserById(Integer id);
     ResponseEntity<String>addRoleToUser(String Email , String Role) ;
     Optional<users>fetchUserByEmail(String Email);
-    ResponseEntity<?> deleteByEmail(String Email);
+    ResponseEntity<?> deleteByEmail(Integer  id);
     ResponseEntity<String> deleteAllUsers();
     ResponseEntity<String> updateNameUser(String Email ,String name);
 

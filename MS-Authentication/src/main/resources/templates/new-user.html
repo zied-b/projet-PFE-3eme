@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* CSS styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .email-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .email-title {
+            font-size: 24px;
+            color: #333;
+        }
+        .email-content {
+            margin-bottom: 20px;
+        }
+        .email-button {
+            display: block;
+            width: 200px;
+            margin: 0 auto;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .email-footer {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <div class="email-header">
+        <h1 class="email-title">Welcome to <strong style="font-size: 24px"><span style="color: #005a87; ">Take</span> <span style="color: #f08700">Reserve</span></strong></h1>
+    </div>
+    <div class="email-content">
+        <p>You have been added to our platform. Please find your login details below:</p>
+        <ul>
+            <li>T-mail: <span th:text="${email}"></span></li>
+            <li>Password: <span th:text="${password}"></span></li>
+        </ul>
+        <p>To access your account, please click the button below:</p>
+
+    </div>
+    <a class="email-button" href="https://example.com/login" style="color: white">Login</a>
+    <div class="email-footer">
+        <p>If you have any questions, please contact our support team.</p>
+    </div>
+</div>
+</body>
+</html>
+

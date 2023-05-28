@@ -1,11 +1,12 @@
 package com.authentication.msauthentication.Controller;
 
-import com.authentication.msauthentication.Repo.RepoUsers;
+import com.authentication.msauthentication.Email.EmailService;
 import com.authentication.msauthentication.RequestConroller.RequestUserUpdateEmail;
 import com.authentication.msauthentication.RequestConroller.UpdateNameUser;
 import com.authentication.msauthentication.RequestConroller.user_roles;
 import com.authentication.msauthentication.Entity.users;
 import com.authentication.msauthentication.service.Interface.InterfaceServiceUsers;
+import jakarta.mail.MessagingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,9 +21,10 @@ import java.util.Optional;
 
 public class ControllerAdminSys {
     private final InterfaceServiceUsers interfaceServiceUsers ;
-
-    public ControllerAdminSys(InterfaceServiceUsers interfaceServiceUsers) {
+    private final EmailService emailService;
+    public ControllerAdminSys(InterfaceServiceUsers interfaceServiceUsers, EmailService emailService) {
         this.interfaceServiceUsers = interfaceServiceUsers;
+        this.emailService = emailService;
     }
 
     @GetMapping("/users")
@@ -37,7 +39,9 @@ public class ControllerAdminSys {
     @PostMapping("/users")
     public ResponseEntity<String> AddNewUser(
                                              @RequestParam String Email
-                                             /*@RequestParam MultipartFile file*/)/* throws IOException */{
+                                             /*@RequestParam MultipartFile file*/) throws MessagingException/* throws IOException */{
+       emailService.newUserEmail(Email);
+
         return interfaceServiceUsers.AddUser(Email);
     }
     @GetMapping("/users/{id}")
@@ -69,8 +73,8 @@ public class ControllerAdminSys {
     }
 
     @DeleteMapping("/users/delete")
-    public ResponseEntity<?> deleteByEmail(@RequestParam String email){
-        return interfaceServiceUsers.deleteByEmail(email);
+    public ResponseEntity<?> deleteByEmail(@RequestParam Integer id){
+        return interfaceServiceUsers.deleteByEmail(id);
     }
     @DeleteMapping("/users/all")
     public ResponseEntity<String> DeleteAllUser() {

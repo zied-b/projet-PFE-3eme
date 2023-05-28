@@ -1,13 +1,14 @@
 package com.authentication.msauthentication.service;
 
 
+import com.authentication.msauthentication.Email.EmailService;
 import com.authentication.msauthentication.Entity.roles;
 import com.authentication.msauthentication.Entity.users;
 import com.authentication.msauthentication.Repo.RepoRoles;
 import com.authentication.msauthentication.Repo.RepoUsers;
 import com.authentication.msauthentication.RequestConroller.*;
-import com.authentication.msauthentication.Security.Token.Service.InterfaceServiceToken;
 import com.authentication.msauthentication.service.Interface.InterfaceServiceUsers;
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,8 @@ public class ServiceUsers implements InterfaceServiceUsers {
     private final RepoUsers repoUsers;
     private final PasswordEncoder passwordEncoder;
 
-    public ServiceUsers( RepoRoles repoRoles, RepoUsers repoUsers, PasswordEncoder passwordEncoder) {
+    public ServiceUsers(RepoRoles repoRoles, RepoUsers repoUsers, PasswordEncoder passwordEncoder) {
+
 
         this.repoRoles = repoRoles;
         this.repoUsers = repoUsers;
@@ -43,7 +45,7 @@ public class ServiceUsers implements InterfaceServiceUsers {
     }
 
     @Override
-    public ResponseEntity<String> AddUser(String Email)  {
+    public ResponseEntity<String> AddUser(String Email) throws MessagingException {
 
         Optional<users> FetchByEmail =repoUsers.findByEmail(Email);
         if (Email.isEmpty()){
@@ -61,9 +63,10 @@ public class ServiceUsers implements InterfaceServiceUsers {
             user.setPassword(passwordEncoder.encode("P@ssword1"));
 
             user.setEmail(Email);
-          //  user.setImage(file.getBytes());
+
             repoUsers.save(user);
             addRoleToUser(user.getEmail(),"Emp");
+
             return ResponseEntity.status(HttpStatus.OK).build();
         }
 
@@ -99,10 +102,10 @@ public class ServiceUsers implements InterfaceServiceUsers {
     }
 
     @Override
-    public ResponseEntity<?> deleteByEmail(String Email) {
+    public ResponseEntity<?> deleteByEmail(Integer id) {
 
-        if (!Email.isEmpty()) {
-            Optional<users> userDelete = repoUsers.findByEmail(Email);
+        if (id!=null) {
+            Optional<users> userDelete = repoUsers.findById(id);
             if (userDelete.isPresent()) {
                 users user=userDelete.get();
 
@@ -114,7 +117,7 @@ public class ServiceUsers implements InterfaceServiceUsers {
             }
 
         }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("repo : "+id);
 
     }
 
