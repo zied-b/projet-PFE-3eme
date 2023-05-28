@@ -35,10 +35,10 @@ public class ControllerAdminSys {
         return ResponseEntity.status(HttpStatus.OK).body(allUsers);
     }
     @PostMapping("/users")
-    public ResponseEntity<String> AddNewUser(@RequestParam String name,
+    public ResponseEntity<String> AddNewUser(
                                              @RequestParam String Email
                                              /*@RequestParam MultipartFile file*/)/* throws IOException */{
-        return interfaceServiceUsers.AddUser(name,Email);
+        return interfaceServiceUsers.AddUser(Email);
     }
     @GetMapping("/users/{id}")
     public Optional<users> fetchUserById(@PathVariable Integer id){

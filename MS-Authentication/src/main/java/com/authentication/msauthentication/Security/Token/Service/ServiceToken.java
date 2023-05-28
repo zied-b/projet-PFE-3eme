@@ -50,9 +50,7 @@ public class ServiceToken implements InterfaceServiceToken {
                 .authenticate(new UsernamePasswordAuthenticationToken(requestUserPassword.getEmail()
                         ,requestUserPassword.getPassword()));
 
-
         Map<String,String> accessToken = new HashMap<>();
-
         Instant instant = Instant.now();
         String roles = authentication.getAuthorities().stream()
                 .map(auth-> auth.getAuthority()).collect(Collectors.joining(" "));
@@ -62,6 +60,7 @@ public class ServiceToken implements InterfaceServiceToken {
                 .expiresAt(instant.plus(9, ChronoUnit.DAYS))
                 .issuer("MS-Authentication")
                 .claim("scope",roles)
+                .claim("firstVisit",serviceUsers.fetchUserByEmail(requestUserPassword.getEmail()).get().getFirstVisit())
                 .build();
 
         String EncoderToken = jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).getTokenValue();
@@ -88,9 +87,11 @@ public class ServiceToken implements InterfaceServiceToken {
                 .builder()
                 .subject(authentication.getName())
                 .issuedAt(instant)
-                .expiresAt(instant.plus(1,ChronoUnit.MINUTES))
+                .expiresAt(instant.plus(9,ChronoUnit.DAYS))
                 .issuer("MS-Authentication")
                 .claim("scope",roles)
+                .claim("firstVisit",serviceUsers.
+                        fetchUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName().toString()).get().getFirstVisit())
                 .build();
         String decodeToken=jwtEncoder.encode(JwtEncoderParameters.from(accessToken)).getTokenValue();
         Map<String,String> AccessToken=new HashMap<>();

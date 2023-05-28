@@ -5,9 +5,8 @@ import com.authentication.msauthentication.Entity.roles;
 import com.authentication.msauthentication.Entity.users;
 import com.authentication.msauthentication.Repo.RepoRoles;
 import com.authentication.msauthentication.Repo.RepoUsers;
-import com.authentication.msauthentication.RequestConroller.RequestNewPassword;
-import com.authentication.msauthentication.RequestConroller.RequestUserUpdateEmail;
-import com.authentication.msauthentication.RequestConroller.UpdateNameUser;
+import com.authentication.msauthentication.RequestConroller.*;
+import com.authentication.msauthentication.Security.Token.Service.InterfaceServiceToken;
 import com.authentication.msauthentication.service.Interface.InterfaceServiceUsers;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
@@ -24,11 +23,13 @@ import java.util.Optional;
 @Service
 @Transactional
 public class ServiceUsers implements InterfaceServiceUsers {
+
     private final RepoRoles repoRoles;
     private final RepoUsers repoUsers;
     private final PasswordEncoder passwordEncoder;
 
-    public ServiceUsers(RepoRoles repoRoles, RepoUsers repoUsers, PasswordEncoder passwordEncoder) {
+    public ServiceUsers( RepoRoles repoRoles, RepoUsers repoUsers, PasswordEncoder passwordEncoder) {
+
         this.repoRoles = repoRoles;
         this.repoUsers = repoUsers;
 
@@ -42,15 +43,13 @@ public class ServiceUsers implements InterfaceServiceUsers {
     }
 
     @Override
-    public ResponseEntity<String> AddUser(String name, String Email)  {
+    public ResponseEntity<String> AddUser(String Email)  {
 
         Optional<users> FetchByEmail =repoUsers.findByEmail(Email);
         if (Email.isEmpty()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error email = Null");
         }
-        else if (name.isEmpty()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error name = Null");
-        }
+
         else if (FetchByEmail.isPresent()){
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body("This user '"+Email+"' exists ");
@@ -60,7 +59,7 @@ public class ServiceUsers implements InterfaceServiceUsers {
 
             users user=new users();
             user.setPassword(passwordEncoder.encode("P@ssword1"));
-            user.setName(name);
+
             user.setEmail(Email);
           //  user.setImage(file.getBytes());
             repoUsers.save(user);
@@ -146,15 +145,12 @@ public class ServiceUsers implements InterfaceServiceUsers {
         if (optionalUsers.isPresent()){
             users user = optionalUsers.get();
             if (passwordEncoder.matches(newPassword.getCurrentPassword(),user.getPassword())){
-
                 user.setPassword(passwordEncoder.encode(newPassword.getNewPassword()));
                 repoUsers.save(user);
-                return new ResponseEntity<>("Update successfully !",HttpStatus.OK);
-
+                return ResponseEntity.ok().build();
             }
             else {
-                return new ResponseEntity<>("Incorrect current password. Password not updated.",
-                        HttpStatus.BAD_REQUEST);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(newPassword.getCurrentPassword()+newPassword.getNewPassword());
             }
 
         }else {
@@ -164,24 +160,29 @@ public class ServiceUsers implements InterfaceServiceUsers {
 
     @Override
     public ResponseEntity<String> updateEmail(RequestUserUpdateEmail updateEmail) {
-        Optional<users>fetchEmail=fetchUserByEmail(updateEmail.getEmail());
-        if (fetchEmail.isPresent()){
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
-
-        Optional<users>optionalUsers=FetchUserById(updateEmail.getIdClient());
+        Optional<users> optionalUsers = repoUsers.findById(updateEmail.getIdClient());
         if (optionalUsers.isPresent()){
-        users user = optionalUsers.get();
-        user.setEmail(updateEmail.getEmail());
-        repoUsers.save(user);
-        return ResponseEntity.status(HttpStatus.OK).build();}
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            optionalUsers.get().setEmail(updateEmail.getEmail());
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @Override
     public String getCurrentUser() {
         String authentication =SecurityContextHolder.getContext().getAuthentication().getName();
         return authentication;
+    }
+
+    @Override
+    public ResponseEntity<?> updateProfile(RequestUpdateProfile requestUpdateProfile) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName().toString();
+        users userUpdate=fetchUserByEmail(email).get();
+        userUpdate.setTlf(requestUpdateProfile.getTlf());
+        userUpdate.setLastName(requestUpdateProfile.getLastName());
+        userUpdate.setFirstName(requestUpdateProfile.getFirstName());
+        repoUsers.save(userUpdate);
+        return ResponseEntity.ok().build();
     }
 
     @Override
@@ -202,6 +203,25 @@ public class ServiceUsers implements InterfaceServiceUsers {
     @Override
     public Optional<List<users>> recherche(String recherche) {
         return repoUsers.recherche(recherche);
+    }
+
+    @Override
+    public ResponseEntity<?> UpdateImageProfile(MultipartFile file) throws IOException {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<users>optionalUsers=fetchUserByEmail(email);
+        optionalUsers.get().setImage(file.getBytes());
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<?> firstVisit(firstVisitRequest visitRequest) {
+        users user = fetchUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName().toString()).get();
+       user.setLastName(visitRequest.getLastName());
+       user.setFirstName(visitRequest.getFirstName());
+       user.setTlf(visitRequest.getTlf());
+       user.setPassword(passwordEncoder.encode(visitRequest.getNewPassword()));
+       user.setFirstVisit(false);
+        return ResponseEntity.ok().build();
     }
 
     @Override

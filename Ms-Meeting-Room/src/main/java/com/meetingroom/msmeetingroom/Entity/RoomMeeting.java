@@ -20,6 +20,8 @@ public class RoomMeeting {
     @Basic(optional = false)
     private String description;
 
+    private String Equipment;
+    private  Integer Capacity;
     @Lob
     @Basic(fetch = FetchType.EAGER)
     private byte[] image;
