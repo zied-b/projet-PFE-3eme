@@ -22,115 +22,35 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ClassService implements InterfaceServiceVehicles {
     private final RepoVehicles repoVehicles;
-    private final RepoType repoType;
-    @Override
-    public ResponseEntity<String> Vehicles(String numberPlate,
-                                           String model,
-                                           String typeVehicle,
-                                           MultipartFile file,
-                                           String marque) throws IOException {
-        if (numberPlate.isEmpty()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Number is Empty ");
-        }else if (model.isEmpty()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Model is Empty ");
-        }else if (!repoType.findByTypeVehicle(typeVehicle).isPresent()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Tis Tye Not Found : "+typeVehicle);
-        }else if (marque.isEmpty()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Marque is Empty ");
-        }else if (typeVehicle.isEmpty()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Type vehicle is Empty ");
-        }else {
-            Optional<Vehicles> optionalVehicles = repoVehicles.findByNumberPlate(numberPlate);
-            Optional<TypeVehicle>optionalTypeVehicle =repoType.findByTypeVehicle(typeVehicle);
-            if (optionalVehicles.isPresent()){
-                return ResponseEntity.status(HttpStatus.CONFLICT)
-                        .body("this Vehicles exist !");
-            }else {
-
-                Vehicles vehicles1 = new Vehicles();
-                vehicles1.setTypeVehicle(optionalTypeVehicle.get());
-                vehicles1.setMarque(marque);
-                vehicles1.setModel(model);
-                vehicles1.setImage(file.getBytes());
-                vehicles1.setNumberPlate(numberPlate);
-                repoVehicles.save(vehicles1);
-               return ResponseEntity.status(HttpStatus.CREATED)
-                        .body("Created Successfully !");
-
-            }
-        }
-
-    }
-    @Override
-    public Boolean addTypeToVehicles(String type){
-        return  null ;
-    }
 
     @Override
-    public ResponseEntity<?> delete(String number) {
-        Optional<Vehicles> vehiclesOptional= findByNumberPlate(number);
-        if (vehiclesOptional.isPresent()){
-            repoVehicles.delete(vehiclesOptional.get());
-            return ResponseEntity.ok().build();
-        }
-        else {
-            return  ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-    }
+    public ResponseEntity<String> Vehicles(RequestVehicles vehicles) throws IOException {
 
+        Optional<Integer> IdVehicle = repoVehicles.getId(vehicles.getNumberPlate());
+        if (IdVehicle.isPresent()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        Vehicles vehicles1= new Vehicles();
+        vehicles1.setMarque(vehicles.getMarque());
+        vehicles1.setModel(vehicles.getModel());
+        vehicles1.setColor(vehicles.getColor());
+        vehicles1.setFuel(vehicles.getFuel());
+        vehicles1.setImage(vehicles.getFile().getBytes());
+        vehicles1.setNumberPlate(vehicles.getNumberPlate());
+        vehicles1.setNumberDoors(vehicles1.getIdVehicle());
+        vehicles1.setYear(vehicles.getYear());
+        repoVehicles.save(vehicles1);
+
+        return ResponseEntity.ok().build();
+    }
 
     @Override
     public List<Vehicles> fetchAll() {
         return repoVehicles.findAll();
     }
 
-
     @Override
-    public Optional<Vehicles> findByNumberPlate(String NumberPlat) {
-        Optional<Integer> id= repoVehicles.getId(NumberPlat);
-        if (id.isPresent()){
-            return repoVehicles.findById(id.get());
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<List<Vehicles>> findAllByTypeVehicle(String type) {
-        return repoVehicles.findAllByTypeVehicle(type);
-    }
-
-    @Override
-    public Optional<List<Vehicles>> findAllByModel(String Model) {
-        return repoVehicles.findAllByModel(Model);
-    }
-
-    @Override
-    public Optional<List<Vehicles>> findAllByModelAndTypeVehicle(String Model, String type) {
-        return repoVehicles.findAllByModelAndTypeVehicle(Model,type);
-    }
-
-    @Override
-    public Optional<List<Vehicles>> findAllByMarque(String Marque) {
-        return repoVehicles.findAllByMarque(Marque);
-    }
-
-    @Override
-    public Optional<List<Vehicles>> findAllByMarqueAndTypeVehicle(String marque, String type) {
-        return repoVehicles.findAllByMarqueAndTypeVehicle(marque,type);
-    }
-
-    @Override
-    public Optional<List<Vehicles>> findAllByMarqueAndModel(String Marque, String Model) {
-        return repoVehicles.findAllByMarqueAndModel(Marque,Model);
-    }
-
-    @Override
-    public Optional<List<Vehicles>> findAllByMarqueAndModelAndTypeVehicle(String Marque, String Model, String Type) {
-        return repoVehicles.findAllByMarqueAndModelAndTypeVehicle(Marque,Model,Type);
+    public Optional<Vehicles> fetchIdVehicle(Integer id) {
+        return repoVehicles.findById(id);
     }
 }

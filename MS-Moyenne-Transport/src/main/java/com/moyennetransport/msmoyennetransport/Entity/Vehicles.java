@@ -16,19 +16,18 @@ public class Vehicles{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer idVehicle;
-    @Basic(optional = false)
+
     private String marque ;
-    @Basic(optional = false)
+
     private String model;
-    @Basic(optional = false)
+
     private String numberPlate ;
     @Lob
     @Basic(fetch = FetchType.LAZY)
     private byte[] image;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinTable(name = "associationTypeVehicle")
+   private String Fuel;
+   private Integer numberDoors;
+   private String color;
+   private Integer Year;
 
-    private TypeVehicle typeVehicle;
-   /* @Transient
-    private String categorie=vehicle;*/
 }
