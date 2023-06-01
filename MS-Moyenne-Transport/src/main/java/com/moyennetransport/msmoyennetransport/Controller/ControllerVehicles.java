@@ -17,9 +17,27 @@ import java.io.IOException;
 public class ControllerVehicles  {
     private final InterfaceServiceVehicles serviceVehicles;
     @PostMapping("/vehicles")
-    public ResponseEntity<?> addVehicles(@RequestBody RequestVehicles vehicles) throws IOException {
-        return serviceVehicles.Vehicles(vehicles);
+    public ResponseEntity<?> addVehicles(@RequestParam("file") MultipartFile file,
+                                         @RequestParam("marque") String marque,
+                                         @RequestParam("model") String model,
+                                         @RequestParam("numberPlate") String numberPlate,
+                                         @RequestParam("fuel") String fuel,
+                                         @RequestParam("numberDoors") Integer numberDoors,
+                                         @RequestParam("color") String color,
+                                         @RequestParam("year") Integer year) throws IOException {
+        RequestVehicles vehicles = new RequestVehicles();
+        vehicles.setMarque(marque);
+        vehicles.setModel(model);
+        vehicles.setNumberPlate(numberPlate);
+        vehicles.setFuel(fuel);
+        vehicles.setNumberDoors(numberDoors);
+        vehicles.setColor(color);
+        vehicles.setYear(year);
+
+        return serviceVehicles.Vehicles(file,vehicles);
+
     }
+
     @GetMapping("/vehicles")
     public ResponseEntity<?> fetchAllVehicles(){
 
@@ -27,5 +45,18 @@ public class ControllerVehicles  {
                     .body(serviceVehicles.fetchAll());
 
     }
+    @DeleteMapping("/vehicles/delete")
+   public ResponseEntity<?>delete(@RequestParam Integer id){
+        return serviceVehicles.Delete(id);
+    }
+    @PutMapping("/vehicles/image-update")
+    public  ResponseEntity<?>updateImage(@RequestParam Integer id,@RequestParam MultipartFile file) throws IOException {
+        return  serviceVehicles.updateImage(id,file);
+    }
+    @PutMapping("/vehicles/update-details")
+    public ResponseEntity<?>updateDetails(@RequestBody RequestVehicles vehicles){
+        return  serviceVehicles.UpdateDetails(vehicles);
+    }
+
 
 }

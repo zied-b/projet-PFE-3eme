@@ -12,12 +12,17 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface InterfaceServiceVehicles{
-    public ResponseEntity<?> Vehicles(RequestVehicles vehicles) throws IOException;
+public interface InterfaceServiceVehicles {
+    public ResponseEntity<?> Vehicles(MultipartFile file,RequestVehicles vehicles) throws IOException;
 
 
     List<Vehicles> fetchAll();
     Optional<Vehicles>fetchIdVehicle(Integer id);
+
+    ResponseEntity<?>Delete(Integer id);
+    ResponseEntity<?>updateImage(Integer id ,MultipartFile file) throws IOException;
+    ResponseEntity<?>UpdateDetails(RequestVehicles vehicles);
+
 
 
 
