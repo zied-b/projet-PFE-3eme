@@ -15,14 +15,15 @@ import java.util.Optional;
 public interface interfaceServiceMi {
 
     public ResponseEntity<List<computerHardware>> fetchAll();
-    public Optional<computerHardware> fetchByRef(String ref);
-    public ResponseEntity<String> deleteByRef(String ref);
-    public ResponseEntity<String> addMaterielInformatique(String nameProduct,String ref,String description ,MultipartFile file) throws IOException;
-    public ResponseEntity<String> updateNameProduct(requestUpdateName updateName);
-    public ResponseEntity<String> updateDescription(requestUpdateDescription updateDescription);
-    public ResponseEntity<String>UpdateRef(requestUpdateRef updateRef);
-    public  ResponseEntity<String> UpdateImage(String ref,MultipartFile file) throws IOException;
-    Optional<Integer> getIdByRef(String ref);
+
+
+    public ResponseEntity<?>add(String ref,String nameProduct,String description,MultipartFile file) throws IOException;
+    public ResponseEntity<?>updateInfo(Integer id,String ref,String nameProduct,String description) ;
+    public ResponseEntity<?>updateImage(Integer id ,MultipartFile file) throws IOException;
+    public ResponseEntity<?>delete(Integer id ) ;
+
+
+
 
 
 

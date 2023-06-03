@@ -3,6 +3,7 @@ package com.computerhardware.mscomputerhardware.Controller;
 import com.computerhardware.mscomputerhardware.ClassRequest.requestUpdateDescription;
 import com.computerhardware.mscomputerhardware.ClassRequest.requestUpdateName;
 import com.computerhardware.mscomputerhardware.ClassRequest.requestUpdateRef;
+import com.computerhardware.mscomputerhardware.ClassRequest.updateComputerHardwar;
 import com.computerhardware.mscomputerhardware.Controller.Interface.InterfaceControllerMI;
 import com.computerhardware.mscomputerhardware.Entity.computerHardware;
 import com.computerhardware.mscomputerhardware.Service.Interface.interfaceServiceMi;
@@ -28,66 +29,43 @@ public class ControllerMi implements InterfaceControllerMI {
         return serviceMi.fetchAll();
     }
 
-
     @Override
     @PostMapping("/materiel-informatique")
-    @PreAuthorize("hasAuthority('SCOPE_AMI')")
-    public ResponseEntity<String> addMaterielInformatique(@RequestParam String nameProduct,
-                                                          @RequestParam String ref,
-                                                          @RequestParam String description,
-                                                          @RequestParam MultipartFile file) throws IOException {
-        return serviceMi.addMaterielInformatique(nameProduct, ref,description ,file);
-    }
-
-    @Override
-    @GetMapping("materiel-informatique/{ref}")
     @PreAuthorize("hasAuthority('SCOPE_Emp')")
-    public Optional<computerHardware> fetchByRef(@PathVariable String ref) {
-        return serviceMi.fetchByRef(ref);
+    public ResponseEntity<?> add(@RequestParam String ref,
+                                 @RequestParam String nameProduct,
+                                 @RequestParam String description,
+                                 @RequestParam MultipartFile file) throws IOException {
+        return serviceMi.add(ref,nameProduct,description,file);
     }
 
     @Override
-    @DeleteMapping("materiel-informatique/delete/{ref}")
-    @PreAuthorize("hasAuthority('SCOPE_AMI')")
-    public ResponseEntity<String> deleteByRef(@PathVariable String ref){
-        if (ref.isEmpty()){
-            return ResponseEntity.badRequest().build();
-        }
-        return serviceMi.deleteByRef(ref);
+    public ResponseEntity<?> updateInfo(Integer id, String ref, String nameProduct, String description) {
+        return null;
     }
 
-
-
-    @Override
-    @PutMapping("materiel-informatique/name/update")
-    @PreAuthorize("hasAuthority('SCOPE_AMI')")
-
-    public ResponseEntity<String> updateNameProduct(@RequestBody requestUpdateName updateName) {
-        return serviceMi.updateNameProduct(updateName);
+    @PostMapping("/materiel-informatique/update/info")
+    @PreAuthorize("hasAuthority('SCOPE_Emp')")
+    public ResponseEntity<?> updateInfo(@RequestBody updateComputerHardwar computerHardwar) {
+        return serviceMi.updateInfo(computerHardwar.getId(),
+                computerHardwar.getRef(),
+                computerHardwar.getNameProduct(),
+                computerHardwar.getDescription());
     }
 
     @Override
-    @PutMapping("materiel-informatique/description/update")
-    @PreAuthorize("hasAuthority('SCOPE_AMI')")
-    public ResponseEntity<String> updateDescription(@RequestBody requestUpdateDescription updateDescription) {
-        return serviceMi.updateDescription(updateDescription);
+    @PutMapping("/materiel-informatique/update/image")
+    @PreAuthorize("hasAuthority('SCOPE_Emp')")
+    public ResponseEntity<?> updateImage(@RequestParam Integer id,@RequestParam MultipartFile file) throws IOException {
+        return serviceMi.updateImage(id,file);
     }
 
     @Override
-    @PutMapping("materiel-informatique/ref/update")
-    @PreAuthorize("hasAuthority('SCOPE_AMI')")
-    public ResponseEntity<String> UpdateRef(@RequestBody requestUpdateRef updateRef) {
-        return serviceMi.UpdateRef(updateRef);
-    }
-    @Override
-    @PutMapping("materiel-informatique/image/update")
-    @PreAuthorize("hasAuthority('SCOPE_AMI')")
-    public ResponseEntity<String> UpdateImage(String ref, MultipartFile file) throws IOException {
-        return serviceMi.UpdateImage(ref,file);
+    @DeleteMapping("/materiel-informatique/delete")
+    @PreAuthorize("hasAuthority('SCOPE_Emp')")
+    public ResponseEntity<?> delete(@RequestParam Integer id) {
+        return serviceMi.delete(id);
     }
 
-    @Override
-    public Optional<Integer> getIdByRef(String ref) {
-        return Optional.empty();
-    }
+
 }

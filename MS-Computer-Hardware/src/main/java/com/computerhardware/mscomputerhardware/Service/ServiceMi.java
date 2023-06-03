@@ -35,125 +35,54 @@ public class ServiceMi implements interfaceServiceMi {
     }
 
     @Override
-    public Optional<Integer> getIdByRef(String ref) {
-        return repoMI.getIdByRef(ref) ;
-    }
-
-
-
-    @Override
-    public Optional<computerHardware> fetchByRef(String ref) {
-        if (getIdByRef(ref).isPresent()){
-            return repoMI.findById(getIdByRef(ref).get());
+    public ResponseEntity<?> add(String ref, String nameProduct, String description, MultipartFile file) throws IOException {
+        Optional<Integer> id=repoMI.getIdByRef(ref);
+        if (id.isPresent()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-        return Optional.empty();
+        computerHardware hardware =new computerHardware();
+        hardware.setRef(ref);
+        hardware.setDescription(description);
+        hardware.setNameProduct(nameProduct);
+        hardware.setImage(file.getBytes());
+        repoMI.save(hardware);
+        return ResponseEntity.ok().build();
     }
 
     @Override
-    public ResponseEntity<String> deleteByRef(String ref) {
-        if(!ref.isEmpty()) {
-            Optional<computerHardware> informatiqueOptional = fetchByRef(ref);
-            if (informatiqueOptional.isPresent()) {
-                computerHardware computerHardware = informatiqueOptional.get();
-                repoMI.delete(computerHardware);
-                return new ResponseEntity<>("Delete Bien'" + computerHardware.getNameProduct() + "'\n" +
-                        " by ref :" + computerHardware.getRef() + "' successfully"
-                        , HttpStatus.OK);
-            }
-                return new ResponseEntity<>("The ref  '" + ref + "' does not exist"
-                        , HttpStatus.NOT_FOUND);
-
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
-
-    @Override
-    public ResponseEntity<String> addMaterielInformatique(String nameProduct,String ref,String description ,MultipartFile file) throws IOException {
-        Optional<computerHardware> optionalMaterielInformatique = fetchByRef(ref);
-
-        if (optionalMaterielInformatique.isPresent()){
-            return new ResponseEntity<>("This ref '"+ref+"' exists"
-                    , HttpStatus.CONFLICT);
-        }else {
-
-            computerHardware hardware=new computerHardware();
-            hardware.setRef(ref);
-            hardware.setNameProduct(nameProduct);
+    public ResponseEntity<?> updateInfo(Integer id, String ref, String nameProduct, String description) {
+        computerHardware hardware = repoMI.findById(id).get();
+        if (hardware.getRef().equals(ref)){
             hardware.setDescription(description);
-            hardware.setImage(file.getBytes());
 
+            hardware.setNameProduct(nameProduct);
             repoMI.save(hardware);
-            return new ResponseEntity<>("This MI '"+nameProduct+"' has been created successfully"
-                    ,HttpStatus.CREATED);
-        }
-    }
-
-    @Override
-    public ResponseEntity<String> updateNameProduct(requestUpdateName updateName) {
-        Optional<computerHardware> materielInformatiqueOptional=fetchByRef(updateName.getRef());
-        if (materielInformatiqueOptional.isPresent()){
-            computerHardware computerHardware =materielInformatiqueOptional.get();
-            computerHardware.setNameProduct(updateName.getName());
-            repoMI.save(computerHardware);
-            return new ResponseEntity<>("update name product successfully !",HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>("The ref  '"+updateName.getRef()+"' does not exist",
-                    HttpStatus.NOT_FOUND);
-        }
-
-    }
-
-    @Override
-    public ResponseEntity<String> updateDescription(requestUpdateDescription updateDescription) {
-        Optional<computerHardware> materielInformatiqueOptional=fetchByRef(updateDescription.getRef());
-        if (materielInformatiqueOptional.isPresent()){
-            computerHardware computerHardware =materielInformatiqueOptional.get();
-            computerHardware.setDescription(updateDescription.getDescription());
-            repoMI.save(computerHardware);
-            return new ResponseEntity<>("update description successfully !",HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>("The ref  '"+updateDescription.getRef()+"' does not exist",
-                    HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @Override
-    public ResponseEntity<String> UpdateRef(requestUpdateRef updateRef) {
-        Optional<computerHardware> optionalMaterielInformatiqueNew=fetchByRef(updateRef.getNewRef());
-        Optional<computerHardware> optionalMaterielInformatique =fetchByRef(updateRef.getCurrRef());
-        if (optionalMaterielInformatiqueNew.isEmpty()){
-            if (optionalMaterielInformatique.isPresent()){
-                computerHardware computerHardware =optionalMaterielInformatique.get();
-                computerHardware.setRef(updateRef.getNewRef());
-                repoMI.save(computerHardware);
-                return ResponseEntity.status(HttpStatus.OK)
-                        .body("Update Ref '"+updateRef.getCurrRef()+"' to '"+updateRef.getNewRef()+"' successfully !");
-            }
-            else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("The ref  '"+updateRef.getCurrRef()+"' does not exist");
-            }
-
-        }else {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body("This reference is already in use by "+optionalMaterielInformatiqueNew.get().toString());
-        }
-
-    }
-
-    @Override
-    public ResponseEntity<String> UpdateImage(String ref,MultipartFile file) throws IOException {
-        Optional<computerHardware>optionalComputerHardware=fetchByRef(ref);
-        if(optionalComputerHardware.isPresent()){
-            optionalComputerHardware.get().setImage(file.getBytes());
             return ResponseEntity.ok().build();
         }
-        return  ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        Optional<Integer> IdRef= repoMI.getIdByRef(ref);
+        if (IdRef.isPresent()){
+            ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        hardware.setNameProduct(nameProduct);
+        hardware.setDescription(description);
+        hardware.setRef(ref);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @Override
+    public ResponseEntity<?> updateImage(Integer id, MultipartFile file) throws IOException {
+        computerHardware hardware =repoMI.findById(id).get();
+        hardware.setImage(file.getBytes());
+        return ResponseEntity.ok().build();
+    }
 
+    @Override
+    public ResponseEntity<?> delete(Integer id) {
+        computerHardware hardware =repoMI.findById(id).get();
+        repoMI.delete(hardware);
+        return ResponseEntity.ok().build();
+    }
 
 
 }
