@@ -44,7 +44,7 @@ public class ControllerMi implements InterfaceControllerMI {
         return null;
     }
 
-    @PostMapping("/materiel-informatique/update/info")
+    @PutMapping("/materiel-informatique/update/info")
     @PreAuthorize("hasAuthority('SCOPE_Emp')")
     public ResponseEntity<?> updateInfo(@RequestBody updateComputerHardwar computerHardwar) {
         return serviceMi.updateInfo(computerHardwar.getId(),

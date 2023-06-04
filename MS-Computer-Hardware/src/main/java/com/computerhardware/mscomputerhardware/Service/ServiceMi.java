@@ -57,7 +57,7 @@ public class ServiceMi implements interfaceServiceMi {
 
             hardware.setNameProduct(nameProduct);
             repoMI.save(hardware);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.status(HttpStatus.OK).body(repoMI.findById(id).get());
         }
         Optional<Integer> IdRef= repoMI.getIdByRef(ref);
         if (IdRef.isPresent()){
@@ -66,15 +66,16 @@ public class ServiceMi implements interfaceServiceMi {
         hardware.setNameProduct(nameProduct);
         hardware.setDescription(description);
         hardware.setRef(ref);
-
-        return ResponseEntity.status(HttpStatus.OK).build();
+        repoMI.save(hardware);
+        return ResponseEntity.status(HttpStatus.OK).body(repoMI.findById(id).get());
     }
 
     @Override
     public ResponseEntity<?> updateImage(Integer id, MultipartFile file) throws IOException {
         computerHardware hardware =repoMI.findById(id).get();
         hardware.setImage(file.getBytes());
-        return ResponseEntity.ok().build();
+        repoMI.save(hardware);
+        return ResponseEntity.ok().body(repoMI.findById(id).get());
     }
 
     @Override
