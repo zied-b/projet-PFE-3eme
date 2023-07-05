@@ -11,8 +11,8 @@
         <module name="MS-Moyenne-Transport" />
         <module name="MS-Authentication" />
         <module name="MS-Reservation" />
-        <module name="Ms-Meeting-Room" />
         <module name="Eureka-server" />
+        <module name="Ms-Meeting-Room" />
         <module name="confg-server" />
       </profile>
     </annotationProcessing>

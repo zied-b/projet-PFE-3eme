@@ -35,7 +35,11 @@ public class ControllerMeetingRom implements InterfaceController{
 
     @Override
     @PostMapping("/meetingRoom")
-    public ResponseEntity<?> addMeetingRoom(String name, Integer capacity, String description, String equipment, MultipartFile file) throws IOException {
+    public ResponseEntity<?> addMeetingRoom(@RequestParam String name,
+                                            @RequestParam Integer capacity,
+                                            @RequestParam String description,
+                                            @RequestParam String equipment,
+                                            @RequestParam MultipartFile file) throws IOException {
         return interfaceMeetingRoom.addMeetingRoom(name,capacity,description,equipment,file);
     }
 
@@ -62,5 +66,8 @@ public class ControllerMeetingRom implements InterfaceController{
         return interfaceMeetingRoom.Delete(id);
     }
 
-
+    @GetMapping("/meetingRoom/id")
+    public ResponseEntity<?>fetchById(@RequestParam Integer id){
+        return ResponseEntity.ok().body(meetingRoom.findById(id));
+    }
 }

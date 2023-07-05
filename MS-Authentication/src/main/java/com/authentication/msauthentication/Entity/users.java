@@ -19,7 +19,7 @@ public class users  {
     @GeneratedValue(strategy = GenerationType.AUTO)
 
     Integer idUser;
-    @Basic(optional = false)
+
     String name ;
 
     private  String lastName=null;
