@@ -10,9 +10,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
 @RequiredArgsConstructor
 @Service
 public class ServiceReservation implements InterfaceReservation {
@@ -55,7 +54,7 @@ public class ServiceReservation implements InterfaceReservation {
         // Save the reservation to the database
         try {
             repoReservation.save(reservation);
-            return ResponseEntity.ok("Reservation added successfully");
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add reservation: " + e.getMessage());
         }
@@ -84,7 +83,9 @@ public class ServiceReservation implements InterfaceReservation {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss-SSSS");
         String formattedDate = now.format(formatter);
-        return new ResponseEntity<>(formattedDate, HttpStatus.OK);
+        Map<String,String> date= new HashMap<>();
+        date.put("date",formattedDate);
+        return new ResponseEntity<>(date, HttpStatus.OK);
     }
 
     @Override

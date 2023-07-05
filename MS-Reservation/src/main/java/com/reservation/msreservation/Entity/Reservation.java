@@ -24,7 +24,8 @@ public class Reservation {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateFin;
 
-    private boolean annulee;
+    private boolean annulee=false;
+    private String name;
 
 
 }

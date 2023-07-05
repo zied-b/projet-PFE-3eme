@@ -17,112 +17,46 @@ import java.io.IOException;
 public class ControllerVehicles  {
     private final InterfaceServiceVehicles serviceVehicles;
     @PostMapping("/vehicles")
-    public ResponseEntity<String> addVehicles(@RequestParam String numberPlate,
-                                              @RequestParam String model,
-                                              @RequestParam String typeVehicle,
-                                              @RequestParam MultipartFile file,
-                                              @RequestParam String marque) throws IOException {
-        return serviceVehicles.Vehicles(numberPlate,model,typeVehicle,file,marque);
+    public ResponseEntity<?> addVehicles(@RequestParam("file") MultipartFile file,
+                                         @RequestParam("marque") String marque,
+                                         @RequestParam("model") String model,
+                                         @RequestParam("numberPlate") String numberPlate,
+                                         @RequestParam("fuel") String fuel,
+                                         @RequestParam("numberDoors") Integer numberDoors,
+                                         @RequestParam("color") String color,
+                                         @RequestParam("year") Integer year) throws IOException {
+        RequestVehicles vehicles = new RequestVehicles();
+        vehicles.setMarque(marque);
+        vehicles.setModel(model);
+        vehicles.setNumberPlate(numberPlate);
+        vehicles.setFuel(fuel);
+        vehicles.setNumberDoors(numberDoors);
+        vehicles.setColor(color);
+        vehicles.setYear(year);
+
+        return serviceVehicles.Vehicles(file,vehicles);
+
     }
+
     @GetMapping("/vehicles")
     public ResponseEntity<?> fetchAllVehicles(){
-        if (serviceVehicles.fetchAll().isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Not Found !");
-        }else {
+
             return ResponseEntity.status(HttpStatus.OK)
                     .body(serviceVehicles.fetchAll());
-        }
+
     }
     @DeleteMapping("/vehicles/delete")
-    public ResponseEntity<?> delete(@RequestParam String number){
-       return serviceVehicles.delete(number);
+   public ResponseEntity<?>delete(@RequestParam Integer id){
+        return serviceVehicles.Delete(id);
     }
-    public ResponseEntity<?> findByNumberPlate(String NumberPlat) {
-
-        if(serviceVehicles.findByNumberPlate(NumberPlat).isPresent()){
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(serviceVehicles.findByNumberPlate(NumberPlat).get());
-        }
-        else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found");
-        }
+    @PutMapping("/vehicles/image-update")
+    public  ResponseEntity<?>updateImage(@RequestParam Integer id,@RequestParam MultipartFile file) throws IOException {
+        return  serviceVehicles.updateImage(id,file);
+    }
+    @PutMapping("/vehicles/update-details")
+    public ResponseEntity<?>updateDetails(@RequestBody RequestVehicles vehicles){
+        return  serviceVehicles.UpdateDetails(vehicles);
     }
 
 
-    public ResponseEntity<?> findAllByTypeVehicle(String type) {
-        if(serviceVehicles.findAllByTypeVehicle(type).isPresent()){
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(serviceVehicles.findAllByTypeVehicle(type).get());
-        }
-        else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found");
-        }
-    }
-
-
-    public ResponseEntity<?> findAllByModel(String Model) {
-        if(serviceVehicles.findAllByModel(Model).isPresent()){
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(serviceVehicles.findAllByModel(Model).get());
-        }
-        else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found");
-        }
-    }
-
-
-    public ResponseEntity<?> findAllByModelAndTypeVehicle(String Model, String type) {
-        if(serviceVehicles.findAllByModel(Model).isPresent()){
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(serviceVehicles.findAllByModel(Model).get());
-        }
-        else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found");
-        }
-    }
-
-
-    public ResponseEntity<?> findAllByMarque(String Marque) {
-        if(serviceVehicles.findAllByMarque(Marque).isPresent()){
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(serviceVehicles.findAllByMarque(Marque).get());
-        }
-        else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found");
-        }
-    }
-
-
-    public ResponseEntity<?> findAllByMarqueAndTypeVehicle(String marque, String type) {
-        if(serviceVehicles.findAllByMarqueAndTypeVehicle(marque,type).isPresent()){
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(serviceVehicles.findAllByMarqueAndTypeVehicle(marque,type).get());
-        }
-        else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found");
-        }
-    }
-
-
-    public ResponseEntity<?> findAllByMarqueAndModel(String Marque, String Model) {
-        if(serviceVehicles.findAllByMarqueAndModel(Marque,Model).isPresent()){
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(serviceVehicles.findAllByMarqueAndModel(Marque,Model).get());
-        }
-        else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found");
-        }
-    }
-
-
-    public ResponseEntity<?> findAllByMarqueAndModelAndTypeVehicle(String Marque, String Model, String Type) {
-        if(serviceVehicles.findAllByMarqueAndModelAndTypeVehicle(Marque,Model,Type).isPresent()){
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(serviceVehicles.findAllByMarqueAndModelAndTypeVehicle(Marque,Model,Type).get());
-        }
-        else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found");
-        }
-    }
 }

@@ -19,8 +19,16 @@ public class users  {
     @GeneratedValue(strategy = GenerationType.AUTO)
 
     Integer idUser;
-    @Basic(optional = false)
+
     String name ;
+
+    private  String lastName=null;
+
+    private String firstName=null;
+
+    private Integer tlf=null;
+    private  Boolean firstVisit=true;
+
     @Basic(optional = false)
     String email;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

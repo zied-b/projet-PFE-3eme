@@ -1,20 +1,26 @@
 package com.moyennetransport.msmoyennetransport.Request;
 
-import com.moyennetransport.msmoyennetransport.Entity.TypeVehicle;
-import jakarta.persistence.Basic;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToOne;
+
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @AllArgsConstructor@NoArgsConstructor
 public class RequestVehicles {
+    private Integer id;
     private String marque ;
+
     private String model;
+
     private String numberPlate ;
-    private String typeVehicle;
+
+
+    private String Fuel;
+    private Integer numberDoors;
+    private String color;
+    private Integer Year;
 
 }

@@ -88,6 +88,18 @@ public class EmailService {
 
         return newPassword.toString();
     }
+    public void newUserEmail(String Email) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setSubject("Welcome to Take Reserve");
+        helper.setTo(Email);
+        Context context = new Context();
+        context.setVariable("email", Email);
+        context.setVariable("password","P@ssword1" );
+        helper.setText(templateEngine.process("new-user", context), true);
+        mailSender.send(message);
+
+    }
 
 
 }

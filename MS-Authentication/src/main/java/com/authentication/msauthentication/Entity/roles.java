@@ -18,5 +18,6 @@ public class roles {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Integer idRole ;
     private String role ;
+    private String description;
 
 }

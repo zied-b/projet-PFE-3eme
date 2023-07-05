@@ -12,25 +12,17 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface InterfaceServiceVehicles{
-    public ResponseEntity<String> Vehicles(String numberPlate,
-                                           String model,
-                                           String typeVehicle,
-                                           MultipartFile file,
-                                           String marque) throws IOException;
+public interface InterfaceServiceVehicles {
+    public ResponseEntity<?> Vehicles(MultipartFile file,RequestVehicles vehicles) throws IOException;
 
 
     List<Vehicles> fetchAll();
-    Boolean addTypeToVehicles(String type);
-    ResponseEntity<?> delete(String number);
-    Optional<Vehicles> findByNumberPlate(String NumberPlat);
-    Optional<List<Vehicles>> findAllByTypeVehicle(String type);
-    Optional<List<Vehicles>> findAllByModel(String Model);
-    Optional<List<Vehicles>> findAllByModelAndTypeVehicle(String Model,String type);
-    Optional<List<Vehicles>> findAllByMarque(String Marque);
-    Optional<List<Vehicles>> findAllByMarqueAndTypeVehicle(String marque,String type);
-    Optional<List<Vehicles>> findAllByMarqueAndModel(String Marque,String Model);
-    Optional<List<Vehicles>> findAllByMarqueAndModelAndTypeVehicle(String Marque,String Model,String Type);
+    Optional<Vehicles>fetchIdVehicle(Integer id);
+
+    ResponseEntity<?>Delete(Integer id);
+    ResponseEntity<?>updateImage(Integer id ,MultipartFile file) throws IOException;
+    ResponseEntity<?>UpdateDetails(RequestVehicles vehicles);
+
 
 
 

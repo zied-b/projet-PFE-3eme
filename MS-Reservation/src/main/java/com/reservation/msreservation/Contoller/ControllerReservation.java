@@ -44,14 +44,16 @@ public class ControllerReservation implements InterfaceReservation {
     }
 
     @Override
-    @PutMapping("/Reservation/Annulee/{id}")
-    public ResponseEntity<?> annuleeReservation(@PathVariable Integer id) {
+    @DeleteMapping("/Reservation/Annulee")
+    public ResponseEntity<?> annuleeReservation(@RequestParam Integer id) {
         return interfaceReservation.annuleeReservation(id);
     }
-    @GetMapping("/Reservation/Annulee/{id}")
-    public Optional<List<Reservation>> getAnnuleeReservation(@PathVariable Integer id) {
-        return interfaceReservation.getAnnuleeReservation(id);
+
+    @Override
+    public Optional<List<Reservation>> getAnnuleeReservation(Integer id) {
+        return Optional.empty();
     }
+
 
     @Override
     @GetMapping("/date")
